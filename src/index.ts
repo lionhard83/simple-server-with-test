@@ -4,17 +4,33 @@ export type Person = {
   name: string;
   surname: string;
   fiscalCode: string;
+  age?: number;
+  address?: {
+    street: string;
+    civic: string;
+    x: number;
+  };
+  phone?: {
+    model: string;
+    brand: string;
+    x: number;
+  };
 };
 
 export let people: Person[] = [];
 
 export const addPerson = (person: Person) => {
-  const exists = people.some((p) => p.fiscalCode === person.fiscalCode);
+  const exists = people.some(
+    ({ fiscalCode }) => fiscalCode === person.fiscalCode
+  );
   !exists && people.push(person);
 };
 
-export const removePerson = (person: Person) => {
-  people = people.filter((p) => person.fiscalCode !== p.fiscalCode);
+export const removePerson = ({ fiscalCode }: Person) => {
+  people = people.filter(({ fiscalCode: f1 }) => fiscalCode !== f1);
 };
 
-addPerson({ name: "Carlo", surname: "Leonardi", fiscalCode: "uiqwbfdw" });
+export const getAvarage = () =>
+  people
+    .filter(({ age }) => age !== undefined)
+    .reduce((acc, { age }, _, { length }) => acc + (age || 0) / length, 0);
